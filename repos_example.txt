@@ -1,0 +1,2 @@
+https://github.com/eth0izzle/shhgit-test.git
+https://github.com/Plazmaz/leaky-repo.git

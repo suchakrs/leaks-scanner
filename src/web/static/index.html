@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git Leaks Scanner Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <h1>🔍 Git Leaks Scanner</h1>
+        <p class="subtitle">Scan repositories for secrets and credentials</p>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Days Filter Slider -->
+      <section class="days-filter-section card">
+        <div class="days-filter-content">
+          <label for="stats-days-slider">📊 Stats from last <span id="stats-days-value">365</span> days</label>
+          <input type="range" id="stats-days-slider" min="0" max="730" value="730" class="days-slider">
+          <div class="days-slider-labels">
+            <span>over 2 Years</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats Cards -->
+      <section class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-scans">0</div>
+          <div class="stat-label">Total Scans</div>
+        </div>
+        <div class="stat-card stat-info">
+          <div class="stat-value" id="stat-commits">0</div>
+          <div class="stat-label">Total Commits</div>
+        </div>
+        <div class="stat-card stat-warning">
+          <div class="stat-value" id="stat-findings">0</div>
+          <div class="stat-label">Total Findings</div>
+        </div>
+        <div class="stat-card stat-danger">
+          <div class="stat-value" id="stat-confirmed">0</div>
+          <div class="stat-label">Confirmed Leaks</div>
+        </div>
+        <div class="stat-card stat-success">
+          <div class="stat-value" id="stat-false-positives">0</div>
+          <div class="stat-label">False Positives</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-pending">0</div>
+          <div class="stat-label">Pending Review</div>
+        </div>
+      </section>
+
+      <!-- Scan Controls -->
+      <section class="scan-controls card">
+        <h2>🚀 New Scan</h2>
+        <div class="scan-form">
+          <div class="form-group form-group-repos">
+            <label>Target Repositories</label>
+            <div class="repo-list-controls">
+              <button type="button" class="btn btn-sm btn-outline" id="select-all-repos">Select All</button>
+              <button type="button" class="btn btn-sm btn-outline" id="deselect-all-repos">Deselect All</button>
+              <span class="repo-count" id="repo-count">0 / 0 selected</span>
+            </div>
+            <div id="repo-list" class="repo-checkbox-list">
+              <div class="loading">Loading repositories...</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="since-days">Since (days)</label>
+            <input type="number" id="since-days" class="form-control" placeholder="30" min="1" max="365">
+          </div>
+          <div class="btn-group">
+            <button id="scan-btn" class="btn btn-primary">
+              <span class="btn-icon">▶</span> Scan Selected
+            </button>
+            <button id="scan-all-btn" class="btn btn-secondary">
+              <span class="btn-icon">⚡</span> Scan All
+            </button>
+            <button id="clear-btn" class="btn btn-outline-danger">
+              <span class="btn-icon">🗑</span> Clear Reports
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Two Column Layout -->
+      <div class="content-grid">
+        <!-- Reports List -->
+        <section class="reports-list card">
+          <h2>📋 Scan History</h2>
+          <div id="reports-container" class="reports-container">
+            <div class="loading">Loading reports...</div>
+          </div>
+        </section>
+
+        <!-- Report Detail -->
+        <section class="report-detail card" id="report-detail">
+          <h2>📄 Report Details</h2>
+          <div id="report-content" class="report-content">
+            <div class="empty-state">
+              Select a report to view details
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
