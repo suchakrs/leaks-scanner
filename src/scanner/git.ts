@@ -15,20 +15,26 @@ export async function cloneRepo(url: string, repoName: string): Promise<string> 
 
 	console.log(`Cloning ${url} to ${targetDir}...`);
 
-	const proc = Bun.spawn(['git', 'clone', '--depth=1000', url, targetDir], {
-		stdout: 'pipe',
-		stderr: 'pipe',
-	});
+	try {
+		const proc = Bun.spawn(['git', 'clone', '-c', 'core.longpaths=true', '--depth=1000', url, targetDir], {
+			stdout: 'pipe',
+			stderr: 'pipe',
+		});
 
-	const exitCode = await proc.exited;
+		const exitCode = await proc.exited;
 
-	if (exitCode !== 0) {
-		const stderr = await new Response(proc.stderr).text();
-		throw new Error(`Failed to clone repository: ${stderr}`);
+		if (exitCode !== 0) {
+			const stderr = await new Response(proc.stderr).text();
+			throw new Error(`Failed to clone repository: ${stderr}`);
+		}
+
+		console.log(`Cloned ${url} successfully`);
+		return targetDir;
+	} catch (error) {
+		// Cleanup partial clone on failure
+		await cleanupRepo(targetDir);
+		throw error;
 	}
-
-	console.log(`Cloned ${url} successfully`);
-	return targetDir;
 }
 
 /**

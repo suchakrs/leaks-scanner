@@ -9,6 +9,7 @@ let reportsCache = {}; // Cache detailed reports by ID
 let selectedReport = null;
 let findingsFilter = 'all';
 let statsDaysFilter = 730; // Days slider filter for stats (0-730, over 2 years)
+let currentSort = 'timestamp';
 
 // DOM Elements
 const repoListContainer = document.getElementById('repo-list');
@@ -23,6 +24,7 @@ const reportsContainer = document.getElementById('reports-container');
 const reportContent = document.getElementById('report-content');
 const statsDaysSlider = document.getElementById('stats-days-slider');
 const statsDaysValue = document.getElementById('stats-days-value');
+const sortReportsSelect = document.getElementById('sort-reports');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -42,6 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	clearBtn.addEventListener('click', clearReports);
 	selectAllBtn.addEventListener('click', selectAllRepos);
 	deselectAllBtn.addEventListener('click', deselectAllRepos);
+
+	// Sort handler
+	if (sortReportsSelect) {
+		sortReportsSelect.addEventListener('change', (e) => {
+			currentSort = e.target.value;
+			renderReports();
+		});
+	}
 
 	// Days slider
 	statsDaysSlider.addEventListener('input', (e) => {
@@ -276,6 +286,23 @@ async function renderReports() {
 
 		return { ...report, filteredFindings, confirmed, falsePositives };
 	}));
+
+	// Sort reports based on currentSort
+	reportsWithStats.sort((a, b) => {
+		switch (currentSort) {
+			case 'commits':
+				return (b.commitCount || 0) - (a.commitCount || 0);
+			case 'findings':
+				return (b.filteredFindings || 0) - (a.filteredFindings || 0);
+			case 'confirmed':
+				return (b.confirmed || 0) - (a.confirmed || 0);
+			case 'false_positive':
+				return (b.falsePositives || 0) - (a.falsePositives || 0);
+			case 'timestamp':
+			default:
+				return new Date(b.timestamp) - new Date(a.timestamp);
+		}
+	});
 
 	reportsContainer.innerHTML = reportsWithStats.map(report => `
     <div class="report-item ${selectedReport?.id === report.id ? 'active' : ''}">

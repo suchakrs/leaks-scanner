@@ -74,7 +74,7 @@
           </div>
           <div class="form-group">
             <label for="since-days">Since (days)</label>
-            <input type="number" id="since-days" class="form-control" placeholder="30" min="1" max="365">
+            <input type="number" id="since-days" class="form-control" placeholder="1000" min="1" max="5000">
           </div>
           <div class="btn-group">
             <button id="scan-btn" class="btn btn-primary">
@@ -94,7 +94,19 @@
       <div class="content-grid">
         <!-- Reports List -->
         <section class="reports-list card">
-          <h2>📋 Scan History</h2>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2 style="margin-bottom: 0;">📋 Scan History</h2>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <label for="sort-reports" style="font-size: 0.875rem; color: var(--text-secondary);">Sort by:</label>
+              <select id="sort-reports" class="form-control" style="padding: 0.3rem 0.5rem; width: auto; font-size: 0.875rem;">
+                <option value="timestamp">Date (Newest)</option>
+                <option value="commits">Commits</option>
+                <option value="findings">Total Findings</option>
+                <option value="confirmed">Confirmed Leaks</option>
+                <option value="false_positive">False Positives</option>
+              </select>
+            </div>
+          </div>
           <div id="reports-container" class="reports-container">
             <div class="loading">Loading reports...</div>
           </div>
